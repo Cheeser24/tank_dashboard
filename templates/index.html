@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tank Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>{{ tank_id }} Tank Level</h1>
+
+    <form method="get" action="/">
+        <label for="tank">Tank:</label>
+        <select name="tank" id="tank">
+            {% for t in tank_list %}
+            <option value="{{ t }}" {% if t == tank_id %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="range">Time Range:</label>
+        <select name="range" id="range">
+            <option value="day" {% if range == 'day' %}selected{% endif %}>Day</option>
+            <option value="week" {% if range == 'week' %}selected{% endif %}>Week</option>
+            <option value="month" {% if range == 'month' %}selected{% endif %}>Month</option>
+            <option value="year" {% if range == 'year' %}selected{% endif %}>Year</option>
+        </select>
+
+        <button type="submit">Update</button>
+    </form>
+
+    <div id="chart"></div>
+
+    <script>
+        var timestamps = {{ data.timestamps | safe }};
+        var gallons = {{ data.gallons | safe }};
+        var inches = {{ data.inches | safe }};
+
+        var trace = {
+            x: timestamps,
+            y: inches,
+            mode: 'lines+markers',
+            text: gallons.map(g => g + ' gal'),
+            hovertemplate: '%{x}<br>Depth: %{y} in<br>Gallons: %{text}<extra></extra>'
+        };
+
+        var layout = {
+            title: 'Water Level Over Time',
+            xaxis: { title: 'Time' },
+            yaxis: { title: 'Depth (inches)' }
+        };
+
+        Plotly.newPlot('chart', [trace], layout);
+    </script>
+</body>
+</html>
