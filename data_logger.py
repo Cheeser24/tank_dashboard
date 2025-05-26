@@ -33,7 +33,7 @@ def main():
 
     while True:
         try:
-            line = ser.readline().decode("utf-8").strip()
+            line = ser.readline().decode("utf-8", errors="ignore").strip()
             if line:
                 parsed = parse_message(line)
                 if parsed:
