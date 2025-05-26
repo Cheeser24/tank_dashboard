@@ -35,6 +35,7 @@ def main():
         try:
             line = ser.readline().decode("utf-8", errors="ignore").strip()
             if line:
+                print(f"Raw line: {line}")
                 parsed = parse_message(line)
                 if parsed:
                     with open(LOG_FILE, "a") as f:
